@@ -77,9 +77,10 @@ textarea{min-height:60px;resize:vertical}
 #pvm{position:fixed;inset:0;z-index:50;background:var(--bg,#f4f4f2);display:flex;flex-direction:column}#pvm[hidden]{display:none}
 #pvm .pb{display:flex;gap:8px;align-items:center;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));border-bottom:1px solid #ddd}#pvm .pb button{padding:9px 12px;border-radius:9px;border:1px solid #ccc;background:#fff;font:inherit;font-weight:600}#pvm .pb .go{background:var(--accent,#b4502d);color:#fff;border-color:transparent;margin-left:auto}
 #pvb{overflow:auto;flex:1;touch-action:pan-x pan-y;background:#f0e6e4;padding:0}#pvb .docx-wrapper{background:#f0e6e4!important;padding:12px 8px!important;margin:0;display:block!important;width:max-content!important;min-width:100%;box-sizing:border-box}#pvb .docx-wrapper>section.docx{margin-left:auto!important;margin-right:auto!important}#pvb .docx-wrapper>section.docx{box-shadow:0 1px 6px rgba(0,0,0,.35);margin-bottom:8px!important}#pvb tr>td:first-child p,#pvb tr>td:first-child span{white-space:nowrap!important}
+#setm{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}#setm[hidden]{display:none}#setm .sb{background:var(--card,#fff);color:inherit;border-radius:14px;padding:18px;width:100%;max-width:380px}#setm h3{margin:0 0 12px}#setm label{display:block;font-size:.8rem;opacity:.7;margin-bottom:4px}#setm input{width:100%;padding:11px;border:1px solid #bbb;border-radius:9px;font:inherit}#setm p{font-size:.78rem;opacity:.7;margin:8px 0 14px}#setm .sr{display:flex;gap:8px;justify-content:flex-end}#setm .sr button{padding:10px 16px;border-radius:9px;border:1px solid #ccc;background:#fff;font:inherit;font-weight:600}#setm .go{background:var(--accent,#b4502d)!important;color:#fff;border-color:transparent!important}
 </style></head><body>
-<header><h1>📆 Agenda</h1><div class="nav"><button id="prev">‹</button><span id="monthLabel"></span><button id="next">›</button></div></header>
-<div class="toolbar"><button class="sec" id="todayBtn">Oggi</button><button id="printBtn">👁️ Anteprima</button><button id="xlsBtn">📄 Foglio presenze</button><button class="sec" id="jsBtn">💾 Salva JSON</button><button class="sec" id="jlBtn">📂 Carica JSON</button></div><div id="cloud"></div><div id="pvm" hidden><div class="pb"><button id="pvc">‹ Chiudi</button><strong id="pvt" style="font-size:13px"></strong><button id="pvz0">－</button><button id="pvz1">＋</button><button class="go" id="pvd">📄 Word</button></div><div id="pvb"></div></div><input type="file" id="jf" accept=".json,application/json" hidden>
+<header><h1>📆 Agenda</h1><div class="nav"><button id="prev">‹</button><span id="monthLabel"></span><button id="next">›</button><button id="cfgBtn" aria-label="Impostazioni" style="font-size:22px;line-height:1">⋮</button></div></header>
+<div class="toolbar"><button class="sec" id="todayBtn">Oggi</button><button id="printBtn">👁️ Anteprima</button><button id="xlsBtn">📄 Foglio presenze</button><button class="sec" id="jsBtn">💾 Salva JSON</button><button class="sec" id="jlBtn">📂 Carica JSON</button></div><div id="cloud"></div><div id="setm" hidden><div class="sb"><h3>⚙️ Impostazioni</h3><label for="cfgTec">Nome del tecnico</label><input id="cfgTec" type="text" placeholder="Cognome e Nome" autocomplete="off"><p>Usato nel foglio presenze (piè di pagina) e come tecnico predefinito nei nuovi rapportini.</p><div class="sr"><button id="cfgNo">Annulla</button><button class="go" id="cfgOk">Salva</button></div></div></div><div id="pvm" hidden><div class="pb"><button id="pvc">‹ Chiudi</button><strong id="pvt" style="font-size:13px"></strong><button id="pvz0">－</button><button id="pvz1">＋</button><button class="go" id="pvd">📄 Word</button></div><div id="pvb"></div></div><input type="file" id="jf" accept=".json,application/json" hidden>
 <div class="calendar"><div class="wd"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div><div class="grid" id="grid"></div></div>
 
 <div class="overlay" id="overlay"><div class="sheet">
@@ -138,7 +139,7 @@ function openRap(k,i){
  $('rapfr').srcdoc=RAP.replace('<head>','<head><script>window.claude={use:async n=>n==="downloads"?{save:o=>parent.pdfOut(o)}:parent.claude.use(n)};var G=Storage.prototype.getItem,S0=Storage.prototype.setItem,R0=Storage.prototype.removeItem;Storage.prototype.getItem=function(k){return k==="rap"?parent.rapInit():G.call(this,k)};Storage.prototype.setItem=function(k,v){if(k==="rap")parent.rapSave(v);else S0.call(this,k,v)};Storage.prototype.removeItem=function(k){if(k==="rap")parent.rapSave(null);else R0.call(this,k)};<\/script>');
  $('rapov').classList.add('open');
 }
-window.rapInit=()=>{if(!curRap)return'{}';const e=(data[curRap.k]||[])[curRap.i]||{};return JSON.stringify(e.rap||{sig:{},data:new Date(curRap.k+'T12:00:00').toLocaleDateString('it-IT'),spett0:e.cliente||''})};
+window.rapInit=()=>{if(!curRap)return'{}';const e=(data[curRap.k]||[])[curRap.i]||{};return JSON.stringify(e.rap||{sig:{},data:new Date(curRap.k+'T12:00:00').toLocaleDateString('it-IT'),spett0:e.cliente||'',tec:(window.cfgTec&&cfgTec())||''})};
 window.rapSave=v=>{if(!curRap)return;const e=(data[curRap.k]||[])[curRap.i];if(!e)return;if(v===null){delete e.rap;e.rapOk=false}else{try{e.rap=JSON.parse(v);e.rapOk=true}catch(x){return}}save()};
 function syncRap(){
  return;let now='';try{now=localStorage.getItem('rap')||''}catch(x){}
@@ -197,11 +198,18 @@ async function buildMese(y,m){
   es.forEach(e=>{if(e.type==='cantiere'){ore+=num(e.oreLavoro);if(e.cliente)cl.push(e.cliente);if(e.note)nt.push(String(e.note).replace(/\s*\n\s*/g,'; '));if(num(e.oreViaggio))nt.push('viaggio '+fmt(num(e.oreViaggio))+'h')}else if(e.type==='permesso')perm+=num(e.orePermesso);else if(e.type==='ferie')fer=true;else if(e.type==='malattia')nt.push('Malattia')});
   const ord=Math.min(ore,8),st=Math.max(ore-8,0);
   put(tcs[1],cl.join(' / '),22);put(tcs[2],ord?fmt(ord):'',22);put(tcs[3],st?fmt(st):'',22);put(tcs[4],perm?fmt(perm):'',22);put(tcs[5],fer?'X':'',22);put(tcs[6],nt.join(' - '),18)}
+ [...doc.getElementsByTagNameNS(W,'t')].forEach(t=>{if(/PRESENZE/.test(t.textContent))t.textContent='PRESENZE   '+String(window.cfgTec&&cfgTec()||'').toUpperCase()});
  zip.file('word/document.xml',new XMLSerializer().serializeToString(doc));
  return {filename:'Presenze_'+MN[m]+'_'+y+'.docx',data:await zip.generateAsync({type:'arraybuffer',compression:'DEFLATE'})}}
 async function exportMese(){try{await sendFile(await buildMese(cur.getFullYear(),cur.getMonth()))}catch(x){alert('Errore esportazione: '+x.message)}}
 
 /* ---- salvataggio automatico (db) + JSON ---- */
+let CFG={tec:'Cognome e Nome'};try{Object.assign(CFG,JSON.parse(localStorage.getItem('agenda_cfg')||'{}'))}catch(x){}
+const saveCfg=()=>{try{localStorage.setItem('agenda_cfg',JSON.stringify(CFG))}catch(x){}};
+window.cfgTec=()=>CFG.tec;
+$('cfgBtn').onclick=()=>{$('cfgTec').value=CFG.tec;$('setm').hidden=false;setTimeout(()=>$('cfgTec').focus(),50)};
+$('cfgNo').onclick=()=>{$('setm').hidden=true};
+$('cfgOk').onclick=()=>{CFG.tec=$('cfgTec').value.trim();saveCfg();$('setm').hidden=true;cl('⚙️ Nome tecnico: '+(CFG.tec||'(vuoto)'))};
 let col=null,synced={},tmr=null;
 const cl=t=>{const e=$('cloud');if(e)e.textContent=t};
 const daysJson=()=>{const o={};for(const k in data)if(data[k]&&data[k].length)o[k]=JSON.stringify(data[k]);return o};
@@ -216,14 +224,14 @@ save=()=>{baseSave();if(col){clearTimeout(tmr);tmr=setTimeout(pushDb,700)}};
  const c=db.collection('data/users/'+id),snap=await c.get();
  snap.docs.forEach(d=>{const v=d.data();if(v&&v.es){try{data[d.id]=JSON.parse(v.es);synced[d.id]=v.es}catch(x){}}});
  col=c;render();renderList&&renderList();baseSave();await pushDb()}catch(x){cl('💾 Dati salvati sul telefono · copia di sicurezza: Salva JSON')}})();
-async function saveJson(){const o={filename:'agenda_'+keyFor(new Date())+'.json',data:new TextEncoder().encode(JSON.stringify({v:2,agenda:data},null,1))};
+async function saveJson(){const o={filename:'agenda_'+keyFor(new Date())+'.json',data:new TextEncoder().encode(JSON.stringify({v:2,cfg:CFG,agenda:data},null,1))};
  const f=new File([o.data],o.filename,{type:'application/json'});
  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:o.filename});return}}catch(x){if(x&&x.name==='AbortError')return}
  try{const dl=await claude.use('downloads');if(dl){await dl.save(o);return}}catch(x){}
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([o.data],{type:'application/json'}));a.download=o.filename;document.body.appendChild(a);a.click();a.remove()}
 $('jsBtn').onclick=saveJson;
 $('jlBtn').onclick=()=>$('jf').click();
-$('jf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const j=JSON.parse(await f.text()),n=j.agenda||j;if(typeof n!=='object'||Array.isArray(n))throw 0;
+$('jf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const j=JSON.parse(await f.text()),n=j.agenda||j;if(j.cfg&&typeof j.cfg.tec==='string'){CFG.tec=j.cfg.tec;saveCfg()}if(typeof n!=='object'||Array.isArray(n))throw 0;
  if(!confirm('Caricare il file? Le voci dello stesso giorno vengono sostituite.'))return;
  for(const k in n)if(Array.isArray(n[k]))data[k]=n[k];save();render();renderList&&renderList();cl('📂 Dati caricati da JSON')}catch(x){alert('File JSON non valido')}};
 
